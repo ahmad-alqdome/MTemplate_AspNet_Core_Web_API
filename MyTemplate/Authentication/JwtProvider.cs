@@ -8,7 +8,7 @@ public class JwtProvider : IJwtProvider
         _jwtOptions = options.Value;
     }
 
-    public (string token, int expiresIn) GenrateToken(ApplicationUser user, IEnumerable<string> roles)
+    public (string token, int expiresIn) GenerateToken(ApplicationUser user, IEnumerable<string> roles)
     {
         var claims = new List<Claim>
         {

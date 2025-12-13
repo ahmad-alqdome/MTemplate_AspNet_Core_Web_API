@@ -2,13 +2,10 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using MyTemplate.Authentication;
-using MyTemplate.Options;
 using MyTemplate.Persistense;
+using MyTemplate.Services.Implementations;
 using System.Reflection;
-using System.Text;
+
 
 namespace MyTemplate;
 
@@ -21,13 +18,23 @@ public static class DependencyInjection
         services.AddJwtOption();
         services.AddAuthConfig(configuration);
         services.AddIdentityConfig(configuration);
+        services.AddHttpContextAccessor();
+        services.AddCORSConfig(configuration);
 
+        services.AddServices();
+
+
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+        });
 
         return services;
     }
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddSingleton<IJwtProvider,JwtProvider>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
@@ -62,7 +69,7 @@ public static class DependencyInjection
             options.Password.RequiredLength = 8;
             options.User.RequireUniqueEmail = true;
             options.SignIn.RequireConfirmedEmail = false;
-        }).AddEntityFrameworkStores<ApplicationDbConext>()
+        }).AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
         return services;
