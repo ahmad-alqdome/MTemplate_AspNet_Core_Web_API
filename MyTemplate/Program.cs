@@ -9,6 +9,13 @@ builder.Services.AddDependencies(builder.Configuration);
 
 var app = builder.Build();
 
+// Seed Permissions عند التشغيل
+using (var scope = app.Services.CreateScope())
+{
+    var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
+    await permissionService.AddModulePermissionsAsync();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

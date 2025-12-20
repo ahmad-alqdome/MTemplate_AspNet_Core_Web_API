@@ -9,6 +9,9 @@ public class ApplicationRole:IdentityRole<Guid>
         Id = Guid.CreateVersion7();
     }
 
+    public ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
+
+
     public bool IsDisabled { get; set; } = false;
     public DateTime? DisabledDate { get; set; }
 

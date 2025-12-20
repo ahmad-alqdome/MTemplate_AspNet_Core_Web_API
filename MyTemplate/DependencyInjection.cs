@@ -40,6 +40,8 @@ public static class DependencyInjection
     {
         services.AddSingleton<IJwtProvider,JwtProvider>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPermissionService, PermissionService>();
+        services.AddScoped<IRoleService,RoleService>();
 
         return services;
     }
