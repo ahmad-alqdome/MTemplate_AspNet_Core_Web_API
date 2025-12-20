@@ -29,17 +29,12 @@ public class Response
 
 public class Response<T>: Response
 {
-    private readonly T? _value;
+    public  T? Result { get; set; }
 
-    public Response()
-    {
-        
-    }
+    public Response(){}
     public Response(T? value,bool isSuccess,Error error):base(isSuccess,error)
     {
-        _value = value;
+        Result = value;
     }
-
-    public T Result => IsSuccess ? _value! : throw new InvalidOperationException("Cannot access the value of a failed response.");
 
 }

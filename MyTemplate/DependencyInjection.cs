@@ -2,6 +2,8 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using MyTemplate.Filters;
 using MyTemplate.Persistense;
 using MyTemplate.Services.Implementations;
 using System.Reflection;
@@ -13,7 +15,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddControllers();
+        services.AddControllers(op=>op.Filters.Add<ValidationFilter>());
+        services.AddFluentValidationConfig();
         services.AddOpenApi();
         services.AddJwtOption();
         services.AddAuthConfig(configuration);
@@ -22,6 +25,8 @@ public static class DependencyInjection
         services.AddCORSConfig(configuration);
 
         services.AddServices();
+
+        services.AddMapsterConfig();
 
 
         services.AddDbContext<ApplicationDbContext>(options =>
@@ -92,6 +97,11 @@ public static class DependencyInjection
     }
     private static IServiceCollection AddFluentValidationConfig(this IServiceCollection services)
     {
+        services.Configure<ApiBehaviorOptions>(config =>
+        {
+            config.SuppressModelStateInvalidFilter = true;
+        });
+
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 
